@@ -28,7 +28,7 @@ function pullTimes() {
   todaySpan.text(day);
 
   //checks if obj in local store
-  temp = JSON.parse(localStorage.getItem("tasks"));
+  var temp = JSON.parse(localStorage.getItem("tasks"));
   if (temp) {
     tasks = temp;
   }
