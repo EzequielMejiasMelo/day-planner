@@ -45,17 +45,19 @@ function renderTimes() {
     let keyTime = keys[i][1];
 
     //Render DOM elements
-    var taskRow = $("<div>").addClass("row").attr("data-index", keyHour);
+    var taskRow = $("<div>").addClass("row");
     var pTag = $("<p>")
       .addClass("col-2 text-right p-2 hour")
       .text(keyTime);
     var textAreaTag = $("<textarea>")
       .addClass("col-8 ")
-      .attr("id", "taskItem")
+      .attr("id", keyHour)
+      .attr("data-index", keyTime)
       .text(tasks[keyTime]);
     var iconTag = $("<i>").addClass("fas fa-save");
     var buttonTag = $("<button>")
       .addClass("col-2 btn saveBtn")
+      .attr("data-index", keyHour)
       .append(iconTag);
 
     //sets time based classes
@@ -76,9 +78,29 @@ function renderTimes() {
   return;
 }
 
+//finds edited text and saves to localstorage
 function setTimes(event) {
+  //checks if button was clicked
+  var isButton = event.target.nodeName === "BUTTON";
+  if (!isButton){
+    return;
+  }
+
+  //finds button, textarea and necessary key for tasks object
+  var buttonIndex = event.target.dataset.index;
+  var currentTextArea = $('#' + buttonIndex);
+  var currentKey = currentTextArea[0].dataset.index;
+
+  //updates tasks object with key
+  tasks[currentKey] = currentTextArea.val();
+
+  //updates or sets tasks object in localstorage
   localStorage.setItem("tasks", JSON.stringify(tasks));
   return;
 }
 
+//listener checks for clicks and runs setTimes
+$(".container").click(setTimes);
+
+//runs pullTimes on page load
 $(document).ready(pullTimes);
